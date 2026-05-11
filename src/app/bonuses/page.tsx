@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { ExternalLink, Copy, Check, Trophy, Users, Sparkles, CheckCircle } from 'lucide-react'
+import { ExternalLink, Copy, Check, Trophy, Sparkles, CheckCircle } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 const CASINOS = [
@@ -17,7 +17,7 @@ const CASINOS = [
     code: 'LIGHTA',
     features: ['Instant withdrawals', 'Provably fair games', 'Weekly leaderboard prizes', '24/7 Live support'],
     description: 'Premium casino with the best slots, live games, and instant crypto payouts. Use code LIGHTA for exclusive benefits.',
-    stats: { players: '2.4k+', wagered: '$4.2M', prizes: '$42k+' },
+    stats: { prizes: '$42k+' },
   },
   {
     id: 'hypedrop',
@@ -30,7 +30,7 @@ const CASINOS = [
     code: 'LIGHTA',
     features: ['Mystery boxes', 'Guaranteed value', 'Case battles', 'Box upgrades'],
     description: 'The #1 mystery box platform. Open boxes, battle friends, and win real items. Guaranteed minimum value on every box.',
-    stats: { players: '1.8k+', wagered: '$2.8M', prizes: '$28k+' },
+    stats: { prizes: '$28k+' },
   },
 ]
 
@@ -67,7 +67,7 @@ export default function BonusesPage() {
               transition={{ delay: i * 0.15, ease: [0.16, 1, 0.3, 1] }}
               className="glass-card rounded-3xl p-8 md:p-10 relative overflow-hidden group"
             >
-              <div className={`absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl ${casino.color} opacity-[0.04] rounded-full -translate-y-1/3 translate-x-1/3 group-hover:opacity-[0.08] transition-opacity duration-700`} />
+              <div className={`absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-bl ${casino.color} opacity-[0.02] rounded-full -translate-y-1/2 translate-x-1/2 blur-[60px] group-hover:opacity-[0.035] transition-opacity duration-700`} />
 
               <div className="relative grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-2">
@@ -113,17 +113,11 @@ export default function BonusesPage() {
                 </div>
 
                 <div className="flex flex-col justify-center gap-3">
-                  {[
-                    { icon: Users, value: casino.stats.players, label: 'Active Players', color: 'text-neon-pink' },
-                    { icon: Trophy, value: casino.stats.wagered, label: 'Total Wagered', color: 'text-accent-gold' },
-                    { icon: Trophy, value: casino.stats.prizes, label: 'Prizes Given', color: 'text-accent-emerald' },
-                  ].map(stat => (
-                    <div key={stat.label} className="glass rounded-xl p-4 text-center group/stat hover:bg-white/[0.03] transition-all">
-                      <stat.icon className={`w-4 h-4 ${stat.color} mx-auto mb-1.5 group-hover/stat:scale-110 transition-transform`} />
-                      <p className="text-lg font-bold stat-number">{stat.value}</p>
-                      <p className="text-[10px] text-white/30 uppercase tracking-wider">{stat.label}</p>
-                    </div>
-                  ))}
+                  <div className="glass rounded-xl p-5 text-center group/stat hover:bg-white/[0.03] transition-all">
+                    <Trophy className={`w-5 h-5 text-accent-emerald mx-auto mb-2 group-hover/stat:scale-110 transition-transform`} />
+                    <p className="text-2xl font-bold stat-number">{casino.stats.prizes}</p>
+                    <p className="text-[10px] text-white/30 uppercase tracking-wider">Prizes Given</p>
+                  </div>
                 </div>
               </div>
             </motion.div>

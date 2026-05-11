@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useApp } from '@/context/AppContext'
-import { Trophy, Gift, Users, User, Ticket, Shield, LogOut, Loader2, Home, Sparkles, X, Tag } from 'lucide-react'
+import { Trophy, Gift, Users, User, Ticket, Shield, LogOut, Loader2, Home, Sparkles, X, Tag, DollarSign } from 'lucide-react'
 
 export default function Navbar() {
   const { user, isLoggedIn, isLoading, isAdmin, login, logout, toggleAdmin } = useApp()
@@ -41,6 +41,7 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-0.5 p-1 rounded-2xl bg-white/[0.02]">
             <NavLink href="/" icon={<Home className="w-3.5 h-3.5" />} label="Home" active={pathname === '/'} />
             <NavLink href="/bonuses" icon={<Gift className="w-3.5 h-3.5" />} label="Bonuses" active={pathname === '/bonuses'} />
+            <NavLink href="/jackpot" icon={<DollarSign className="w-3.5 h-3.5" />} label="Jackpot" active={pathname === '/jackpot'} />
             <NavLink href="/leaderboard" icon={<Trophy className="w-3.5 h-3.5" />} label="Leaderboard" active={pathname === '/leaderboard'} />
             {isLoggedIn && (
               <>

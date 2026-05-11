@@ -193,7 +193,7 @@ export default function AdminStreamTab() {
     setActivePoll(ended)
     setPollHistory(prev => [ended, ...prev.slice(0, 4)])
     const winner = ended.options.reduce((a, b) => a.votes > b.votes ? a : b)
-    toast.success(`Poll ended! Winner: ${winner.label}`, { icon: '🏆', duration: 4000 })
+    toast.success(`Poll ended! Winner: ${winner.label}`, { duration: 4000 })
   }
 
   const clearPoll = () => {
@@ -282,9 +282,8 @@ export default function AdminStreamTab() {
               {POLL_PRESETS.map(preset => (
                 <button key={preset.label} onClick={() => startPoll(preset)}
                   className="glass rounded-xl p-3 text-center hover:bg-white/[0.03] hover:border-neon-pink/15 transition-all group">
-                  <p className="text-sm mb-1">{preset.label.split(' ')[0]}</p>
-                  <p className="text-[10px] font-bold">{preset.label.split(' ').slice(1).join(' ')}</p>
-                  <p className="text-[9px] text-white/20 mt-1 font-mono">{preset.command}</p>
+                  <p className="text-xs font-bold mb-0.5">{preset.label}</p>
+                  <p className="text-[9px] text-white/20 font-mono">{preset.command}</p>
                 </button>
               ))}
             </div>

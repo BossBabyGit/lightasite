@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useApp } from '@/context/AppContext'
 import type { RegisteredUser, Bonus } from '@/context/AppContext'
-import { Shield, Users, Zap, DollarSign, Ticket, Plus, Trash2, Play, Edit3, Loader2, X, Clock, MessageSquare, ChevronRight, Gift, Eye, BarChart3, Sparkles, Radio } from 'lucide-react'
+import { Shield, Users, Zap, DollarSign, Ticket, Plus, Trash2, Play, Edit3, X, Clock, MessageSquare, ChevronRight, Gift, Eye, BarChart3, Sparkles, Radio, Trophy } from 'lucide-react'
 import AdminStreamTab from '@/components/AdminStreamTab'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
@@ -52,33 +52,52 @@ export default function AdminPage() {
     setShowCreateForm(false)
   }
 
+  const [reelNames, setReelNames] = useState<string[]>([])
+  const [reelOffset, setReelOffset] = useState(0)
+  const reelAnimRef = useRef<number | null>(null)
+
   const handleRoll = async (id: string) => {
     const raffle = raffles.find(r => r.id === id)
     if (!raffle || raffle.entries.length === 0) return
     setRollingId(id)
     setRollingWinner(null)
     const names = raffle.entries.map(e => e.username)
-    let i = 0
-    rollIntervalRef.current = setInterval(() => {
-      setRollingName(names[i % names.length])
-      i++
-    }, 80)
+    // Build a long reel: shuffle names many times, winner lands at the end
     const winner = await rollRaffle(id)
-    if (rollIntervalRef.current) clearInterval(rollIntervalRef.current)
-    // slow down reveal
-    let slowI = 0
-    const slowNames = [...names, ...names, winner]
-    const slowInterval = setInterval(() => {
-      setRollingName(slowNames[slowI])
-      slowI++
-      if (slowI >= slowNames.length) {
-        clearInterval(slowInterval)
-        setRollingName(null)
-        setRollingWinner(winner)
-        setRollingId(null)
-        toast.success(`Winner: ${winner}!`, { icon: '🎉', duration: 5000 })
+    const shuffled: string[] = []
+    for (let r = 0; r < 8; r++) {
+      const copy = [...names].sort(() => Math.random() - 0.5)
+      shuffled.push(...copy)
+    }
+    shuffled.push(winner)
+    setReelNames(shuffled)
+    setReelOffset(0)
+
+    const ITEM_H = 56
+    const totalDistance = (shuffled.length - 1) * ITEM_H
+    const duration = 4000
+    const startTime = performance.now()
+
+    const animate = (now: number) => {
+      const elapsed = now - startTime
+      const progress = Math.min(elapsed / duration, 1)
+      // Ease-out cubic for deceleration
+      const eased = 1 - Math.pow(1 - progress, 3)
+      setReelOffset(eased * totalDistance)
+      if (progress < 1) {
+        reelAnimRef.current = requestAnimationFrame(animate)
+      } else {
+        setReelOffset(totalDistance)
+        setTimeout(() => {
+          setRollingName(null)
+          setReelNames([])
+          setRollingWinner(winner)
+          setRollingId(null)
+          toast.success(`Winner: ${winner}!`, { duration: 5000 })
+        }, 600)
       }
-    }, 200)
+    }
+    reelAnimRef.current = requestAnimationFrame(animate)
   }
 
   const handleSaveBonus = () => {
@@ -352,29 +371,43 @@ export default function AdminPage() {
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                   className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md">
                   <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} exit={{ scale: 0.8 }}
-                    className="glass-card rounded-3xl p-10 text-center max-w-sm mx-auto relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-neon-pink/[0.05] to-neon-purple/[0.05]" />
+                    className="glass-card rounded-3xl p-10 text-center w-full max-w-md mx-auto relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-neon-pink/[0.04] to-neon-purple/[0.04]" />
                     <div className="relative">
                       {rollingWinner ? (
                         <>
-                          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', bounce: 0.5 }}
-                            className="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br from-neon-pink to-neon-purple flex items-center justify-center text-3xl font-black mb-4 shadow-neon-xl">
-                            🎉
+                          <motion.div initial={{ scale: 0, rotate: -20 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: 'spring', bounce: 0.5, duration: 0.8 }}
+                            className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-neon-pink to-neon-purple flex items-center justify-center mb-5 shadow-neon-xl">
+                            <Trophy className="w-7 h-7 text-white" />
                           </motion.div>
-                          <p className="text-[10px] text-white/30 uppercase tracking-[0.2em] mb-2">Winner</p>
-                          <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-2xl font-black gradient-text mb-6">{rollingWinner}</motion.p>
+                          <p className="text-[10px] text-white/30 uppercase tracking-[0.25em] mb-2">Winner</p>
+                          <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-2xl font-black gradient-text mb-6">{rollingWinner}</motion.p>
                           <button onClick={() => setRollingWinner(null)} className="px-6 py-2 rounded-xl glass text-xs font-medium hover:bg-white/[0.04] transition-all">Close</button>
                         </>
                       ) : (
                         <>
-                          <Loader2 className="w-8 h-8 mx-auto text-neon-pink mb-4 animate-spin" />
-                          <p className="text-[10px] text-white/30 uppercase tracking-[0.2em] mb-3">Rolling...</p>
-                          <div className="h-14 flex items-center justify-center overflow-hidden rounded-xl bg-white/[0.02] border border-white/[0.06]">
-                            <AnimatePresence mode="wait">
-                              <motion.p key={rollingName} initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -20, opacity: 0 }} transition={{ duration: 0.06 }}
-                                className="text-xl font-bold text-neon-pink">{rollingName}</motion.p>
-                            </AnimatePresence>
+                          <p className="text-[10px] text-white/30 uppercase tracking-[0.25em] mb-5">Rolling</p>
+                          {/* Slot machine reel */}
+                          <div className="relative h-14 overflow-hidden rounded-xl bg-white/[0.02] border border-white/[0.06] mx-auto">
+                            {/* Selection indicator */}
+                            <div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-neon-pink to-neon-purple rounded-l-xl z-10" />
+                            <div className="absolute inset-y-0 right-0 w-1 bg-gradient-to-b from-neon-pink to-neon-purple rounded-r-xl z-10" />
+                            <div className="absolute inset-0 border border-neon-pink/20 rounded-xl z-10 pointer-events-none" />
+                            {/* Reel strip */}
+                            <div style={{ transform: `translateY(-${reelOffset}px)` }}>
+                              {reelNames.map((name, i) => (
+                                <div key={i} className="h-14 flex items-center justify-center">
+                                  <span className="text-lg font-bold text-white/80">{name}</span>
+                                </div>
+                              ))}
+                            </div>
                           </div>
+                          {/* Top/bottom fade masks */}
+                          <div className="relative -mt-14 h-14 pointer-events-none rounded-xl overflow-hidden">
+                            <div className="absolute inset-x-0 top-0 h-4 bg-gradient-to-b from-dark-900/80 to-transparent z-20" />
+                            <div className="absolute inset-x-0 bottom-0 h-4 bg-gradient-to-t from-dark-900/80 to-transparent z-20" />
+                          </div>
+                          <p className="text-[9px] text-white/15 mt-4 uppercase tracking-widest">Selecting winner...</p>
                         </>
                       )}
                     </div>

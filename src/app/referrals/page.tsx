@@ -153,6 +153,13 @@ export default function ReferralsPage() {
           </motion.div>
         ) : (
           <motion.div key="casino" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            {/* Description */}
+            <div className="glass-card rounded-2xl p-5 mb-6">
+              <p className="text-sm text-white/50 leading-relaxed">
+                Bring someone on my code and I'll give you <span className="text-white font-semibold">75% of whatever bonuses</span> I give them - deposit bonuses, lossback, etc <span className="text-white font-semibold">INCLUDING LB PLACEMENT</span>.
+              </p>
+            </div>
+
             {/* Requirements Info */}
             <div className="glass-card rounded-2xl p-4 mb-6 flex flex-wrap gap-5 items-center">
               <div className="flex items-center gap-2 text-xs"><DollarSign className="w-3.5 h-3.5 text-accent-emerald" /><span className="text-white/40">Deposit <strong className="text-white/80">$1,000+</strong></span></div>

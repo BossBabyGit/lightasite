@@ -5,7 +5,7 @@ import Navbar from '@/components/Navbar'
 import { Toaster } from 'react-hot-toast'
 
 export const metadata: Metadata = {
-  title: 'Lighta – Official Website',
+  title: 'Lighta - Official Website',
   description: 'Kick Gambling Streamer & Community Hub',
 }
 

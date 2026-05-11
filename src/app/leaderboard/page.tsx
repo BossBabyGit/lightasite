@@ -58,23 +58,23 @@ export default function LeaderboardPage() {
         </motion.div>
 
         <motion.div key={activeTab} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="flex items-end justify-center gap-3 md:gap-5 mb-16 px-4"
+          className="grid grid-cols-3 items-end gap-3 mb-12"
         >
           {/* 2nd */}
-          <div className="flex-1 max-w-[200px]">
-            <div className="glass-card rounded-t-2xl p-4 text-center border-t-2 border-gray-300/30">
+          <div>
+            <div className="glass-card rounded-t-2xl p-4 md:p-5 text-center border-t-2 border-gray-300/30">
               <Medal className="w-5 h-5 text-gray-300 mx-auto mb-2" />
               <div className="w-11 h-11 mx-auto rounded-xl bg-gradient-to-br from-gray-300 to-gray-500 flex items-center justify-center text-sm font-bold mb-2">{top3[1]?.username[0]}</div>
               <p className="font-bold text-xs truncate">{top3[1]?.username}</p>
               <p className="text-white/30 text-[10px] stat-number mt-1">${top3[1]?.wagered.toLocaleString()}</p>
               <p className="text-accent-emerald font-bold text-sm stat-number mt-0.5">${top3[1]?.prize.toLocaleString()}</p>
             </div>
-            <div className="h-16 bg-gradient-to-t from-gray-500/10 to-transparent border-x border-b border-white/[0.04]" />
+            <div className="h-16 bg-gradient-to-t from-gray-500/10 to-transparent border-x border-b border-white/[0.04] rounded-b-xl" />
           </div>
 
           {/* 1st */}
-          <div className="flex-1 max-w-[220px]">
-            <div className="glass-card rounded-t-2xl p-5 text-center border-t-2 border-accent-gold/50 relative gradient-border">
+          <div>
+            <div className="glass-card rounded-t-2xl p-5 md:p-6 text-center border-t-2 border-accent-gold/50 relative gradient-border">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-accent-gold text-black text-[10px] font-black tracking-wider">#1</div>
               <Crown className="w-7 h-7 text-accent-gold mx-auto mb-2 mt-2" />
               <div className="w-14 h-14 mx-auto rounded-xl bg-gradient-to-br from-accent-gold to-yellow-600 flex items-center justify-center text-xl font-bold mb-2 shadow-neon">{top3[0]?.username[0]}</div>
@@ -82,19 +82,19 @@ export default function LeaderboardPage() {
               <p className="text-white/30 text-xs stat-number mt-1">${top3[0]?.wagered.toLocaleString()}</p>
               <p className="text-accent-emerald font-bold text-lg stat-number mt-0.5">${top3[0]?.prize.toLocaleString()}</p>
             </div>
-            <div className="h-24 bg-gradient-to-t from-accent-gold/10 to-transparent border-x border-b border-white/[0.04]" />
+            <div className="h-24 bg-gradient-to-t from-accent-gold/10 to-transparent border-x border-b border-white/[0.04] rounded-b-xl" />
           </div>
 
           {/* 3rd */}
-          <div className="flex-1 max-w-[200px]">
-            <div className="glass-card rounded-t-2xl p-4 text-center border-t-2 border-amber-600/30">
+          <div>
+            <div className="glass-card rounded-t-2xl p-4 md:p-5 text-center border-t-2 border-amber-600/30">
               <Award className="w-5 h-5 text-amber-500 mx-auto mb-2" />
               <div className="w-11 h-11 mx-auto rounded-xl bg-gradient-to-br from-amber-600 to-amber-800 flex items-center justify-center text-sm font-bold mb-2">{top3[2]?.username[0]}</div>
               <p className="font-bold text-xs truncate">{top3[2]?.username}</p>
               <p className="text-white/30 text-[10px] stat-number mt-1">${top3[2]?.wagered.toLocaleString()}</p>
               <p className="text-accent-emerald font-bold text-sm stat-number mt-0.5">${top3[2]?.prize.toLocaleString()}</p>
             </div>
-            <div className="h-10 bg-gradient-to-t from-amber-700/10 to-transparent border-x border-b border-white/[0.04]" />
+            <div className="h-10 bg-gradient-to-t from-amber-700/10 to-transparent border-x border-b border-white/[0.04] rounded-b-xl" />
           </div>
         </motion.div>
 

@@ -105,6 +105,21 @@ export interface PlatformStats {
   totalRafflesRun: number
 }
 
+export interface JackpotContribution {
+  date: string
+  amount: number
+  reason: string
+}
+
+export interface Jackpot {
+  currentAmount: number
+  goal: number
+  month: string
+  endsAt: string
+  contributions: JackpotContribution[]
+  previousWinners: { month: string; amount: number; winners: number }[]
+}
+
 interface AppContextType {
   user: User | null
   isLoggedIn: boolean
@@ -112,6 +127,7 @@ interface AppContextType {
   isAdmin: boolean
   raffles: Raffle[]
   bonuses: Bonus[]
+  jackpot: Jackpot
   platformStats: PlatformStats
   registeredUsers: RegisteredUser[]
   winnaLeaderboard: LeaderboardEntry[]
@@ -264,6 +280,27 @@ const MOCK_BONUSES: Bonus[] = [
   },
 ]
 
+const MOCK_JACKPOT: Jackpot = {
+  currentAmount: 847.50,
+  goal: 0,
+  month: 'May 2026',
+  endsAt: '2026-05-31',
+  contributions: [
+    { date: '2026-05-10', amount: 112.50, reason: 'Stream profit: $7,500 (1.5%)' },
+    { date: '2026-05-08', amount: 45.00, reason: 'Stream profit: $3,000 (1.5%)' },
+    { date: '2026-05-06', amount: 225.00, reason: 'Stream profit: $15,000 (1.5%)' },
+    { date: '2026-05-04', amount: 0, reason: 'Stream ended negative - no contribution' },
+    { date: '2026-05-02', amount: 165.00, reason: 'Stream profit: $11,000 (1.5%)' },
+    { date: '2026-05-01', amount: 300.00, reason: 'Stream profit: $20,000 (1.5%)' },
+  ],
+  previousWinners: [
+    { month: 'April 2026', amount: 1240, winners: 12 },
+    { month: 'March 2026', amount: 980, winners: 8 },
+    { month: 'February 2026', amount: 750, winners: 6 },
+    { month: 'January 2026', amount: 1120, winners: 10 },
+  ],
+}
+
 export function AppProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -271,6 +308,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [raffles, setRaffles] = useState<Raffle[]>(MOCK_RAFFLES)
   const [registeredUsers, setRegisteredUsers] = useState<RegisteredUser[]>(MOCK_USERS)
   const [bonuses, setBonuses] = useState<Bonus[]>(MOCK_BONUSES)
+  const [jackpot] = useState<Jackpot>(MOCK_JACKPOT)
   const [winnaLeaderboard] = useState<LeaderboardEntry[]>(MOCK_WINNA_LB)
   const [hypedropLeaderboard] = useState<LeaderboardEntry[]>(MOCK_HYPEDROP_LB)
 
@@ -482,6 +520,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       isAdmin,
       raffles,
       bonuses,
+      jackpot,
       platformStats,
       registeredUsers,
       winnaLeaderboard,

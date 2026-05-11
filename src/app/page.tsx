@@ -21,12 +21,10 @@ export default function HomePage() {
         {/* Background layers */}
         <div className="absolute inset-0 bg-dark-950" />
 
-        {/* Main gradient orbs — bigger and more dramatic */}
+        {/* Static subtle gradient accents - no animation */}
         <div className="absolute inset-0">
-          <div className="absolute top-[5%] left-[15%] w-[700px] h-[700px] bg-neon-pink/[0.08] rounded-full blur-[200px] animate-float-slower" />
-          <div className="absolute bottom-[10%] right-[5%] w-[600px] h-[600px] bg-neon-purple/[0.09] rounded-full blur-[180px] animate-float-slower" style={{ animationDelay: '5s' }} />
-          <div className="absolute top-[30%] left-[50%] -translate-x-1/2 w-[900px] h-[600px] bg-neon-cyan/[0.035] rounded-full blur-[220px] animate-pulse-slow" />
-          <div className="absolute top-[60%] left-[30%] w-[400px] h-[400px] bg-accent-gold/[0.03] rounded-full blur-[150px] animate-float-slower" style={{ animationDelay: '8s' }} />
+          <div className="absolute top-[10%] left-[20%] w-[500px] h-[500px] bg-neon-pink/[0.03] rounded-full blur-[200px]" />
+          <div className="absolute bottom-[15%] right-[10%] w-[400px] h-[400px] bg-neon-purple/[0.04] rounded-full blur-[180px]" />
         </div>
 
         {/* Hero grid */}
