@@ -149,7 +149,7 @@ export default function HomePage() {
               <ChevronRight className="w-4 h-4 opacity-60 group-hover:translate-x-0.5 transition-transform" />
             </Link>
             {!isLoggedIn && (
-              <button onClick={login} disabled={isLoading}
+              <button onClick={() => login()} disabled={isLoading}>
                 className="px-8 py-3.5 rounded-2xl glass-card font-semibold text-sm text-white/50 hover:text-white hover:border-neon-pink/20 transition-all duration-500 flex items-center gap-2"
               >
                 <Zap className="w-3.5 h-3.5" />
