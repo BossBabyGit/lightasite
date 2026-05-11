@@ -1,14 +1,23 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useApp } from '@/context/AppContext'
-import { Trophy, Gift, Users, User, Ticket, Shield, LogOut, Loader2, Home, Sparkles } from 'lucide-react'
+import { Trophy, Gift, Users, User, Ticket, Shield, LogOut, Loader2, Home, Sparkles, X, Tag } from 'lucide-react'
 
 export default function Navbar() {
   const { user, isLoggedIn, isLoading, isAdmin, login, logout, toggleAdmin } = useApp()
   const pathname = usePathname()
+  const [showLoginModal, setShowLoginModal] = useState(false)
+  const [affiliateCode, setAffiliateCode] = useState('')
+
+  const handleLogin = () => {
+    login(affiliateCode || undefined)
+    setShowLoginModal(false)
+    setAffiliateCode('')
+  }
 
   return (
     <motion.nav
@@ -74,7 +83,7 @@ export default function Navbar() {
               </div>
             ) : (
               <button
-                onClick={login}
+                onClick={() => setShowLoginModal(true)}
                 disabled={isLoading}
                 className="px-5 py-2 rounded-xl bg-gradient-to-r from-neon-pink to-neon-purple font-semibold text-sm hover:shadow-neon-lg transition-all duration-500 disabled:opacity-50 flex items-center gap-2 shimmer-btn"
               >
@@ -95,6 +104,84 @@ export default function Navbar() {
         </div>
       </div>
       <div className="h-px bg-gradient-to-r from-transparent via-neon-pink/20 to-transparent" />
+
+      {/* Login Modal with Affiliate Code */}
+      <AnimatePresence>
+        {showLoginModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm"
+            onClick={() => setShowLoginModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: 'spring', bounce: 0.2, duration: 0.4 }}
+              className="glass-card rounded-2xl p-6 w-full max-w-sm mx-4 relative overflow-hidden"
+              onClick={e => e.stopPropagation()}
+            >
+              <div className="absolute top-0 right-0 w-40 h-40 bg-neon-pink/[0.04] rounded-full blur-[80px]" />
+              <div className="absolute bottom-0 left-0 w-32 h-32 bg-neon-purple/[0.04] rounded-full blur-[60px]" />
+              <div className="relative">
+                <div className="flex items-center justify-between mb-5">
+                  <div>
+                    <h3 className="font-bold text-lg">Sign In</h3>
+                    <p className="text-[10px] text-white/25 mt-0.5">Connect with your Kick account</p>
+                  </div>
+                  <button onClick={() => setShowLoginModal(false)} className="p-1.5 rounded-lg hover:bg-white/[0.05] transition-all">
+                    <X className="w-4 h-4 text-white/30" />
+                  </button>
+                </div>
+
+                <div className="mb-4">
+                  <label className="text-[10px] text-white/30 uppercase tracking-wider font-semibold mb-2 block">
+                    <Tag className="w-3 h-3 inline mr-1.5 -mt-0.5" />
+                    Affiliate / Referral Code
+                  </label>
+                  <input
+                    type="text"
+                    value={affiliateCode}
+                    onChange={e => setAffiliateCode(e.target.value)}
+                    onKeyDown={e => e.key === 'Enter' && handleLogin()}
+                    placeholder="Enter code (optional)"
+                    className="w-full px-4 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] focus:border-neon-pink/30 outline-none text-sm transition-colors placeholder:text-white/15"
+                    autoFocus
+                  />
+                  <p className="text-[9px] text-white/15 mt-1.5">Get <span className="text-neon-pink font-semibold">+250 bonus points</span> when you use a valid code</p>
+                </div>
+
+                <button
+                  onClick={handleLogin}
+                  disabled={isLoading}
+                  className="w-full px-5 py-3 rounded-xl bg-gradient-to-r from-neon-pink to-neon-purple font-semibold text-sm hover:shadow-neon-lg transition-all duration-500 disabled:opacity-50 flex items-center justify-center gap-2 shimmer-btn"
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Connecting...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-3.5 h-3.5" />
+                      Login with Kick
+                    </>
+                  )}
+                </button>
+
+                <button
+                  onClick={handleLogin}
+                  className="w-full mt-2 py-2 text-[10px] text-white/20 hover:text-white/40 transition-all"
+                >
+                  Skip — continue without code
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.nav>
   )
 }

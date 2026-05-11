@@ -25,6 +25,7 @@ export interface User {
     winna: CasinoAccountStats | null
     hypedrop: CasinoAccountStats | null
   }
+  usedAffiliateCode: string | null
   viewerReferrals: ViewerReferral[]
   casinoReferrals: CasinoReferral[]
 }
@@ -115,7 +116,7 @@ interface AppContextType {
   registeredUsers: RegisteredUser[]
   winnaLeaderboard: LeaderboardEntry[]
   hypedropLeaderboard: LeaderboardEntry[]
-  login: () => void
+  login: (affiliateCode?: string) => void
   logout: () => void
   toggleAdmin: () => void
   addPoints: (amount: number) => void
@@ -296,18 +297,20 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   }, [user])
 
-  const login = () => {
+  const login = (affiliateCode?: string) => {
     setIsLoading(true)
     setTimeout(() => {
+      const bonusPoints = affiliateCode && affiliateCode.trim().length > 0 ? 250 : 0
       const newUser: User = {
         username: 'LightaViewer01',
         rank: 'Silver',
-        points: 1250,
+        points: 1250 + bonusPoints,
         watchTimeHours: 24,
         chatMessages: 340,
         referralCode: 'LIGHTA-' + Math.random().toString(36).substr(2, 6).toUpperCase(),
         connectedAccounts: { hypedrop: false, winna: false },
         casinoStats: { winna: null, hypedrop: null },
+        usedAffiliateCode: affiliateCode && affiliateCode.trim().length > 0 ? affiliateCode.trim().toUpperCase() : null,
         viewerReferrals: [
           { username: 'FriendA', joinedAt: '2024-03-10', watchTimeHours: 3.5, chatMessages: 45, qualified: true },
           { username: 'FriendB', joinedAt: '2024-03-18', watchTimeHours: 0.5, chatMessages: 8, qualified: false },
